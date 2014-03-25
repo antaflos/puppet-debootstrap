@@ -20,20 +20,19 @@ Puppet::Type.newtype(:debootstrap) do
   end 
   
   newproperty(:suite) do
-    desc "Ubuntu release name. Example: precise"
+    desc "Ubuntu or Debian release name. Example: precise"
     defaultto('precise')
-    newvalues(/^((precise)|(lucid)|(jaunty)|(hardy)|(feisty))$/i)
   end
 
   newproperty(:arch) do
     desc "Chroot OS architecture. This does not have to match the host OS, but ensure the processor support 64 bit if it chosen. Valid values: 'amd64' or 'i386'"
-    newvalues(/^((i386)|(amd64))$/) 
+    newvalues(:i386, :amd64)
   end
 
   newproperty(:variant) do
     desc "Use variant X of the bootstrap scripts. (currently supported variants: buildd, fakechroot, scratchbox, minbase)"
-    defaultto('buildd')
-    newvalues(/^((buildd)|(fakechroot)|(minbase)|(scratchbox))$/) 
+    defaultto(:buildd)
+    newvalues(:buildd, :fakechroot, :minbase, :scratchbox)
   end
  
   newproperty(:includes) do
@@ -55,7 +54,7 @@ Puppet::Type.newtype(:debootstrap) do
     desc "Ubuntu HTTP mirror."
     validate do |pth|
       unless pth.match(/^((http(s)?:\/\/).*)/i)
-        raise ArgumentError, "Unsupported protocol: #{pth} (expected 'http:' or 'https' )"
+        raise ArgumentError, "Unsupported protocol: #{pth} (expected 'http:' or 'https:' )"
       end
     end
   end 
