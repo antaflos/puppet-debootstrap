@@ -1,5 +1,5 @@
 name    'morphlabs-debootstrap'
-version '0.1.0'
+version '0.2.0'
 source 'https://github.com/MorphGlobal/puppet-debootstrap'
 author 'Morphlabs: Aimon Bustardo - abustardo at morphlabs dot com'
 license 'Apache License, Version 2.0'

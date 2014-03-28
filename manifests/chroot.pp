@@ -6,31 +6,35 @@
 # This defined type is a wrapper for the debootstrap type.
 
 define debootstrap::chroot(
-  $vensure,
-  $vtarget,
-  $vusers,
+  $target,
   $mirror,
-  $vname=$title,
-  $suite='precise',
-  $arch='amd64',
-  $variant='buildd',
-  $includes=undef,
-  $exclude=undef,
-  $components=undef,
+  $ensure      = 'present',
+  $chroot      = $title,
+  $description = $title,
+  $suite       = 'precise',
+  $arch        = 'amd64',
+  $variant     = 'buildd',
+  $users       = [],
+  $groups      = [],
+  $root_users  = [],
+  $root_groups = [ 'root', 'admin' ],
+  $includes    = undef,
+  $exclude     = undef,
+  $components  = undef,
 ){
 
   include 'debootstrap::packages'
 
   # Directories
-  exec{ "create vtarget for ${title}":
-    command  => "/bin/mkdir -p ${vtarget}",
-    creates  => $vtarget,
+  exec { "create vtarget for ${title}":
+    command  => "/bin/mkdir -p ${target}",
+    creates  => $target,
     provider => 'posix',
   }
   # debootstrap
-  debootstrap{$vname:
-    ensure      =>  $vensure,
-    target      =>  $vtarget,
+  debootstrap { $chroot:
+    ensure      =>  $ensure,
+    target      =>  $target,
     suite       =>  $suite,
     arch        =>  $arch,
     variant     =>  $variant,
@@ -41,12 +45,12 @@ define debootstrap::chroot(
     require     =>  [Exec["create vtarget for ${title}"], Class[debootstrap::packages]],
   }
   # Schroot Confs
-  file{"/etc/schroot/chroot.d/${vname}.conf":
-    ensure  =>  $vensure,
+  file { "/etc/schroot/chroot.d/${chroot}.conf":
+    ensure  =>  $ensure,
     mode    =>  '0660',
     owner   =>  'root',
     group   =>  'root',
     content =>  template('debootstrap/schroot.d.conf.erb'),
-    require =>  Debootstrap[$vname],
+    require =>  Debootstrap[$chroot],
   }
 }

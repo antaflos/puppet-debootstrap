@@ -1,10 +1,19 @@
-[<%= @vname %>]
-description=<%= @vname %>
+[<%= @vchroot -%>]
+description=<%= @description %>
 type=directory
-directory=<%= @vtarget %>
+directory=<%= @target %>
 <% if @arch == 'i386' && @architecture == 'amd64'  -%>
 personality=linux32
 <% end -%>
-root-groups=root,admin
-users=<%= @vusers %>
-#script-config=erb
+<% if @users and !@users.empty? -%>
+users=<%= [@users].flatten.compact.join(',') %>
+<% end -%>
+<% if @groups and !@groups.empty? -%>
+users=<%= [@groups].flatten.compact.join(',') %>
+<% end -%>
+<% if @root_users and !@root_users.empty? -%>
+root-users=<%= [@root_users].flatten.compact.join(',') %>
+<% end -%>
+<% if @root_groups and !@root_groups.empty? -%>
+root-groups=<%= [@root_groups].flatten.compact.join(',') %>
+<% end -%>
