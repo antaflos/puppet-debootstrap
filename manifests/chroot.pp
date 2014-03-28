@@ -14,9 +14,9 @@ define debootstrap::chroot(
   $suite='precise',
   $arch='amd64',
   $variant='buildd',
-  $includes=False,
-  $exclude=False,
-  $components=False,
+  $includes=undef,
+  $exclude=undef,
+  $components=undef,
 ){
 
   include 'debootstrap::packages'

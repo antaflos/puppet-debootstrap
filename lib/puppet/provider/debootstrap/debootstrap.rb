@@ -49,9 +49,9 @@ Puppet::Type.type(:debootstrap).provide(:debootstrap) do
   def create
     # Build opts
     opts=Array.new
-    opts << '--include' << includes if not includes.empty?
-    opts << '--exclude' << exclude if not exclude.empty?
-    opts << '--components' << components if not components.empty?
+    opts << '--include' << includes unless includes.nil?
+    opts << '--exclude' << exclude unless exclude.nil?
+    opts << '--components' << components unless components.nil?
     opts << '--variant' << variant << '--arch' << arch << suite << target << mirror
     # Directories, mounts and fstab are created in wrapper function for this provider
     Dir.mkdir(target) unless File.directory?(target)
