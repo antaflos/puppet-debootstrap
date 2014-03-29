@@ -46,7 +46,7 @@ Puppet::Type.newtype(:debootstrap) do
   end
   
   newproperty(:components, :array_matching => :all) do
-    desc "use packages from the listed components of the archive"
+    desc "Use packages from the listed components of the archive"
     defaultto(false)
   end
 
