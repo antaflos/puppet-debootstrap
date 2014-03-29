@@ -34,8 +34,8 @@ Puppet::Type.type(:debootstrap).provide(:debootstrap) do
     resource[:includes]
   end
 
-  def exclude
-    resource[:exclude]
+  def excludes
+    resource[:excludes]
   end
 
   def components
@@ -46,12 +46,16 @@ Puppet::Type.type(:debootstrap).provide(:debootstrap) do
     resource[:mirror]
   end
 
+
   def create
+    l_flatten_comma = lambda { |ary|
+      [ary].flatten.compact.sort.join(',')
+    }
     # Build opts
     opts=Array.new
-    opts << '--include' << includes unless includes.nil?
-    opts << '--exclude' << exclude unless exclude.nil?
-    opts << '--components' << components unless components.nil?
+    opts << '--include' << l_flatten_comma[includes] unless ( includes.nil? or includes.empty? )
+    opts << '--exclude' << l_flatten_comma[excludes] unless ( excludes.nil? or excludes.empty? )
+    opts << '--components' << l_flatten_comma[components] unless  ( components.nil? or components.empty? )
     opts << '--variant' << variant << '--arch' << arch << suite << target << mirror
     # Directories, mounts and fstab are created in wrapper function for this provider
     Dir.mkdir(target) unless File.directory?(target)

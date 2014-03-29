@@ -34,18 +34,18 @@ Puppet::Type.newtype(:debootstrap) do
     defaultto(:buildd)
     newvalues(:buildd, :fakechroot, :minbase, :scratchbox)
   end
- 
-  newproperty(:includes) do
+
+  newproperty(:includes, :array_matching => :all) do
     desc "Adds specified names to the list of base packages"
     defaultto(false)
   end
   
-  newproperty(:exclude) do
+  newproperty(:excludes, :array_matching => :all) do
     desc "Removes specified names to the list of base packages"
     defaultto(false)
   end
   
-  newproperty(:components) do
+  newproperty(:components, :array_matching => :all) do
     desc "use packages from the listed components of the archive"
     defaultto(false)
   end

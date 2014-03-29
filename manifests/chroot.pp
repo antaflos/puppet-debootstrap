@@ -18,15 +18,15 @@ define debootstrap::chroot(
   $groups      = [],
   $root_users  = [],
   $root_groups = [ 'root', 'admin' ],
-  $includes    = undef,
-  $exclude     = undef,
-  $components  = undef,
+  $includes    = [],
+  $excludes    = [],
+  $components  = [],
 ){
 
   include 'debootstrap::packages'
 
   # Directories
-  exec { "create vtarget for ${title}":
+  exec { "create target dir for ${title}":
     command  => "/bin/mkdir -p ${target}",
     creates  => $target,
     provider => 'posix',
@@ -39,11 +39,15 @@ define debootstrap::chroot(
     arch        =>  $arch,
     variant     =>  $variant,
     includes    =>  $includes,
-    exclude     =>  $exclude,
+    excludes    =>  $excludes,
     components  =>  $components,
     mirror      =>  $mirror,
-    require     =>  [Exec["create vtarget for ${title}"], Class[debootstrap::packages]],
+    require     =>  [
+      Exec["create target dir for ${title}"],
+      Class[debootstrap::packages]
+    ],
   }
+
   # Schroot Confs
   file { "/etc/schroot/chroot.d/${chroot}.conf":
     ensure  =>  $ensure,
